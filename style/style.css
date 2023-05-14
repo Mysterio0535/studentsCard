@@ -1,0 +1,33 @@
+.container {
+    max-width: 1920px;
+    padding: 0px 70px;
+}
+
+.header {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.studentForm__text {
+    font-size: 18px ;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+  }
+  
+  #filters {
+    margin-bottom: 10px;
+  }
+  
+  #addStudentForm {
+    margin-bottom: 10px;
+  }
+  
