@@ -150,7 +150,7 @@ function getCourse(endYear) {
   const course = currentYear - endYear + 1;
 
   if (course < 1) {
-    return "Finished";
+    return "Учиться";
   }
 
   return `${course} course`;
@@ -195,37 +195,9 @@ function sortTable(columnIndex) {
   });
 }
 
-// Функция применения фильтров к таблице
-function applyFilters() {
-  const filterName = document.getElementById("filterName").value.trim().toLowerCase();
-  const filterFaculty = document.getElementById("filterFaculty").value.trim().toLowerCase();
-  const filterStartYear = document.getElementById("filterStartYear").value.trim();
-  const filterEndYear = document.getElementById("filterEndYear").value.trim();
 
-  let filteredStudents = students.filter(function (student) {
-    const fullName = `${student.lastName.toLowerCase()} ${student.firstName.toLowerCase()} ${student.middleName.toLowerCase()}`;
-    const startYear = student.startYear.toString();
-    const endYear = (student.startYear + 4).toString();
-
-    if (filterName && !fullName.includes(filterName)) {
-      return false;
-    }
-    if (filterFaculty && !student.faculty.toLowerCase().includes(filterFaculty)) {
-      return false;
-    }
-    if (filterStartYear && startYear !== filterStartYear) {
-      return false;
-    }
-    if (filterEndYear && endYear !== filterEndYear) {
-      return false;
-    }
-
-    return true;
-  });
-
-  students = filteredStudents;
   renderTable();
-}
+
 
 // Обработчик события нажатия кнопки "Add Student"
 const student= document.getElementById("studentForm");
