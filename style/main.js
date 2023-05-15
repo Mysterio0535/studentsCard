@@ -145,15 +145,16 @@ function addLeadingZero(number) {
 }
 
 // Функция определения номера курса на основе года окончания обучения
-function getCourse(endYear) {
+function getCourse(startYear) {
   const currentYear = new Date().getFullYear();
-  const course = currentYear - endYear + 1;
+  const course = currentYear - startYear ;
 
   if (course < 1) {
-    return "Учиться";
+    return `${course} курс`;
+    
   }
-
-  return `${course} course`;
+  return "Закончил";
+ 
 }
 
 // Функция сортировки таблицы по указанному индексу столбца
