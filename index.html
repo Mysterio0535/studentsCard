@@ -1,48 +1,82 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Панель управления студентами</title>
-    <link rel="stylesheet" href="style/style.css">
-</head>
+    <link rel="stylesheet" href="style/style.css" />
+  </head>
 
-<body>
+  <body>
     <section class="container">
-        <h1 class="header">Панель студента</h1>
-        <form id="studentForm">
+      <h1 class="header">Анкета студента</h1>
+
+      <div id="errorContainer"></div>
+
+      <form id="studentForm" class="container__student-form">
+        <ul class="container__student-list">
+          <li class="container__student-list">
             <label for="firstName" class="studentForm__text">Имя:</label>
-            <input type="text" id="firstName" class="form-input" required>
-            
+
+            <input type="text" id="firstName" class="form-input" required />
+          </li>
+          <li class="container__student-list">
             <label for="lastName" class="studentForm__text">Фамилия:</label>
-            <input type="text" id="lastName" class="form-input" required>
-    
+
+            <input type="text" id="lastName" class="form-input" required />
+          </li>
+          <li class="container__student-list">
             <label for="middleName" class="studentForm__text">Отчество:</label>
-            <input type="text" id="middleName" class="form-input" required>
-    
-            <label for="birthdate" class="studentForm__text">День рождения:</label>
-            <input type="date" id="birthdate" class="form-input" required>
-    
-            <label for="startYear" class="studentForm__text">Год начала учебы:</label>
-            <input type="number" id="startYear" class="form-input" required>
-    
+
+            <input type="text" id="middleName" class="form-input" required />
+          </li>
+          <li class="container__student-list">
+            <label for="birthdate" class="studentForm__text"
+              >День рождения:</label
+            >
+
+            <input type="date" id="birthdate" class="form-input" required />
+          </li>
+          <li class="container__student-list">
+            <label for="startYear" class="studentForm__text"
+              >Год начала учебы:</label
+            >
+
+            <input type="number" id="startYear" class="form-input" required />
+          </li>
+          <li class="container__student-list">
             <label for="faculty" class="studentForm__text">Факультет:</label>
-            <input type="text" id="faculty" class="form-input" required>
-    
-            <button type="submit" class="form-button">Добавить студента</button>
-        </form>
-        <h2 class="header-students">Студенты</h2>
-        <table id="studentTable">
-            <thead>
-                <tr>
-                    <th onclick="sortTable(0)">Полное имя</th>
-                    <th onclick="sortTable(1)">Факультет</th>
-                    <th onclick="sortTable(2)">День рождения и возвраст</th>
-                    <th onclick="sortTable(3)">Дата начало и окончания учебы</th>
-                </tr>
-            </thead>
-            <tbody id="studentTableBody"></tbody>
-        </table>
+
+            <input type="text" id="faculty" class="form-input" required />
+          </li>
+          <li class="container__student-list">
+            <button type="submit" class="form-button button">Добавить студента</button>
+          </li>
+        </ul>
+      </form>
+      <h2 class="header-students">Студенты</h2>
+      <table id="studentTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">
+              Полное имя
+              <span class="sort-arrow"></span>
+            </th>
+            <th onclick="sortTable(1)">
+              Факультет
+              <span class="sort-arrow"></span>
+            </th>
+            <th onclick="sortTable(2)">
+              День рождение
+              <span class="sort-arrow"></span>
+            </th>
+            <th onclick="sortTable(3)">
+              Начало учебы
+              <span class="sort-arrow"></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody"></tbody>
+      </table>
     </section>
-    <script src="style/main.js"></script>
-</body>
+    <script src="style/student.js"></script>
+  </body>
 </html>

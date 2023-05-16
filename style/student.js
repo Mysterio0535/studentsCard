@@ -5,6 +5,10 @@ let students = [];
 function addStudent(event) {
   event.preventDefault();
 
+   // Очищаем контейнер с ошибками
+   const errorContainer = document.getElementById("errorContainer");
+   errorContainer.innerHTML = "";
+
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
   const middleName = document.getElementById("middleName").value.trim();
@@ -14,21 +18,34 @@ function addStudent(event) {
 
   // Ошибки при заполнении
   const errors = [];
+  const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s]+$/; // Регулярное выражение для проверки имени и фамилии
+
   if (!firstName) {
     errors.push("Заполните имя");
+  } else if (!nameRegex.test(firstName)) {
+    errors.push("Ошибка : Имя может содержать только буквы");
   }
+
   if (!lastName) {
-    errors.push("заполните фамилию");
+    errors.push("Заполните фамилию");
+  } else if (!nameRegex.test(lastName)) {
+    errors.push("Ошибка : Фамилия может содержать только буквы");
   }
+
   if (!middleName) {
     errors.push("Заполните отчество");
+  } else if (!nameRegex.test(middleName)) {
+    errors.push("Ошибка : Отчество может содержать только буквы");
   }
-  if (isNaN(birthdate.getTime()) || birthdate < new Date("1900-01-01") || birthdate > new Date()) {
-    errors.push("Некоретно введена дата рождения");
+
+  if (isNaN(birthdate.getTime()) || birthdate < new Date("2000-01-01") || birthdate > new Date() || calculateAge(birthdate) < 16) {
+    errors.push("Ошибка : Студент не должен быть младше 16 лет");
   }
+
   if (startYear < 2000 || startYear > new Date().getFullYear()) {
-    errors.push("Дата начала учебы должна быть не раньше 2000");
+    errors.push("Ошибка : Дата начала учебы должна быть не раньше 2000");
   }
+
   if (!faculty) {
     errors.push("Заполните факультет");
   }
@@ -41,7 +58,7 @@ function addStudent(event) {
     errors.forEach(function (error) {
       const errorMessage = document.createElement("p");
       errorMessage.textContent = error;
-      errorMessage.classList.add("Ошибка при заполнении");
+      errorMessage.classList.add("error");
       errorContainer.appendChild(errorMessage);
     });
 
@@ -50,24 +67,21 @@ function addStudent(event) {
 
   // Создаем объект студента
   const student = {
-    firstName: firstName,
-    lastName: lastName,
-    middleName: middleName,
-    birthdate: birthdate,
-    startYear: startYear,
-    faculty: faculty
+   firstName,
+   lastName,
+   middleName,
+   birthdate,
+   startYear,
+   faculty
   };
 
   // Добавляем студента в массив
   students.push(student);
 
   // Очищаем поля формы
-  document.getElementById("firstName").value = "";
-  document.getElementById("lastName").value = "";
-  document.getElementById("middleName").value = "";
-  document.getElementById("birthdate").value = "";
-  document.getElementById("startYear").value = "";
-  document.getElementById("faculty").value = "";
+  Object.keys(student).forEach((key) => {
+    document.getElementById(key).value = "";
+  });
 
   // Обновляем таблицу
   renderTable();
@@ -147,60 +161,66 @@ function addLeadingZero(number) {
 // Функция определения номера курса на основе года окончания обучения
 function getCourse(startYear) {
   const currentYear = new Date().getFullYear();
-  const course = currentYear - startYear ;
+  const course = currentYear - startYear + 4 ;
 
-  if (course < 1) {
-    return `${course} курс`;
-    
+  if (course < 5) {
+    return `${course} курс`;  
   }
-  return "Закончил";
- 
+  return "Закончил"; 
 }
 
 // Функция сортировки таблицы по указанному индексу столбца
 function sortTable(columnIndex) {
-  let sortOrder = 1; // Порядок сортировки по умолчанию (по возрастанию)
-
-  const table = document.getElementById("studentTable");
-  const tableBody = document.getElementById("studentTableBody");
-  const rows = Array.from(tableBody.getElementsByTagName("tr"));
-
-  // Переключение порядка сортировки при повторных нажатиях на заголовок столбца
-  if (table.getAttribute("data-sort-by") === columnIndex.toString()) {
-    sortOrder = -1;
-    rows.reverse();
-  } else {
-    table.setAttribute("data-sort-by", columnIndex.toString());
-
-    rows.sort(function (rowA, rowB) {
-      const cellA = rowA.getElementsByTagName("td")[columnIndex];
-      const cellB = rowB.getElementsByTagName("td")[columnIndex];
-
-      const valueA = cellA.textContent.toLowerCase();
-      const valueB = cellB.textContent.toLowerCase();
-
-      if (valueA < valueB) {
-        return -1 * sortOrder;
-      } else if (valueA > valueB) {
-        return 1 * sortOrder;
-      } else {
-        return 0;
-      }
+    let sortOrder = 1; // Порядок сортировки по умолчанию (по возрастанию)
+  
+    const table = document.getElementById("studentTable");
+    const tableBody = document.getElementById("studentTableBody");
+    const arrows = table.getElementsByClassName("sort-arrow");
+    const rows = Array.from(tableBody.getElementsByTagName("tr"));
+  
+    // Удаление классов сортировки у всех стрелок
+    Array.from(arrows).forEach((arrow) => {
+      arrow.classList.remove("asc", "desc");
+    });
+  
+    // Переключение порядка сортировки при повторных нажатиях на заголовок столбца
+    if (table.getAttribute("data-sort-by") === columnIndex.toString()) {
+      sortOrder = -1;
+      arrows[columnIndex].classList.add("desc");
+      rows.reverse();
+    } else {
+      table.setAttribute("data-sort-by", columnIndex.toString());
+  
+      arrows[columnIndex].classList.add("asc");
+  
+      rows.sort(function (rowA, rowB) {
+        const cellA = rowA.getElementsByTagName("td")[columnIndex];
+        const cellB = rowB.getElementsByTagName("td")[columnIndex];
+  
+        const valueA = cellA.textContent.toLowerCase();
+        const valueB = cellB.textContent.toLowerCase();
+  
+        if (valueA < valueB) {
+          return -1 * sortOrder;
+        } else if (valueA > valueB) {
+          return 1 * sortOrder;
+        } else {
+          return 0;
+        }
+      });
+    }
+  
+    // Удаление существующих строк и добавление отсортированных строк
+    tableBody.innerHTML = "";
+    rows.forEach(function (row) {
+      tableBody.appendChild(row);
     });
   }
+  
 
-  // Удаление существующих строк и добавление отсортированных строк
-  tableBody.innerHTML = "";
-  rows.forEach(function (row) {
-    tableBody.appendChild(row);
-  });
-}
-
-
-  renderTable();
-
+renderTable();
 
 // Обработчик события нажатия кнопки "Add Student"
-const student= document.getElementById("studentForm");
+const studentForm = document.getElementById("studentForm");
 studentForm.addEventListener("submit", addStudent);
-renderTable();
+
